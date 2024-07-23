@@ -1,9 +1,7 @@
 import {Contact} from '../../types';
 import React from 'react';
-import MyModal from '../MyModal/MyModal';
-import {deleteContact, fetchContacts} from '../../store/contactsThunks';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {closeModal, onModal, selectShowModal} from '../../store/contactsSlice';
+import {useAppDispatch} from '../../app/hooks';
+import { getCurrentContact, onModal} from '../../store/contactsSlice';
 
 interface Props {
   contact: Contact;
@@ -11,24 +9,10 @@ interface Props {
 
 const ContactItem: React.FC<Props> = ({contact}) => {
   const dispatch = useAppDispatch();
-  const show = useAppSelector(selectShowModal);
-
-  const onDelete = async () => {
-    try {
-      await dispatch(deleteContact(contact.id));
-      onClose();
-      await dispatch(fetchContacts());
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const onClose = () => {
-    dispatch(closeModal());
-  };
 
   const showModal = () => {
     dispatch(onModal());
+    dispatch(getCurrentContact(contact));
   };
 
   return (
@@ -39,12 +23,6 @@ const ContactItem: React.FC<Props> = ({contact}) => {
           <h4 className="text-primary-emphasis fs-1">{contact.name}</h4>
         </div>
       </div>
-      <MyModal
-        isShow={show}
-        onClose={onClose}
-        contact={contact}
-        onDelete={onDelete}
-      />
     </>
   );
 };

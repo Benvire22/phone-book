@@ -10,6 +10,7 @@ export interface ContactsState {
   editLoading: boolean;
   fetchOneContactLoading: boolean;
   existingContact: null | ContactMutation;
+  currentContact: null | Contact;
   showModal: boolean
 }
 
@@ -21,6 +22,7 @@ const initialState: ContactsState = {
   editLoading: false,
   fetchOneContactLoading: false,
   existingContact: null,
+  currentContact: null,
   showModal: false
 };
 
@@ -34,6 +36,14 @@ export const contactsSlice = createSlice({
 
     closeModal: (state) => {
       state.showModal = false;
+    },
+
+    getCurrentContact: (state, {payload: contact}) => {
+      state.currentContact = contact;
+    },
+
+    clearCurrentContact: (state) => {
+      state.currentContact = null;
     }
 
   },
@@ -93,12 +103,13 @@ export const contactsSlice = createSlice({
     selectExistingContact: (state) => state.existingContact,
     fetchOneContactLoading: (state) => state.fetchOneContactLoading,
     selectShowModal: (state) => state.showModal,
+    selectCurrentContact: (state) => state.currentContact,
   }
 });
 
 export const contactsReducer = contactsSlice.reducer;
 
-export const {closeModal, onModal} = contactsSlice.actions;
+export const {closeModal, onModal, getCurrentContact, clearCurrentContact} = contactsSlice.actions;
 
 export const {
   selectContacts,
@@ -109,4 +120,5 @@ export const {
   selectExistingContact,
   fetchOneContactLoading,
   selectShowModal,
+  selectCurrentContact,
 } = contactsSlice.selectors;
