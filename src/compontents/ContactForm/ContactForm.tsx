@@ -1,4 +1,4 @@
-import {ContactMutation} from '../../types';
+import {ApiContact, ContactMutation} from '../../types';
 import React, { useState} from 'react';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
 import {useParams} from 'react-router-dom';
@@ -11,7 +11,7 @@ const initialState: ContactMutation = {
 };
 
 interface Props {
-  onSubmit: (contact: ContactMutation) => void;
+  onSubmit: (contact: ApiContact) => void;
   isLoading: boolean
 }
 
@@ -25,7 +25,13 @@ const ContactForm: React.FC<Props> = ({onSubmit, isLoading}) => {
 
   const sendForm = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    const newContact: ApiContact = {
+      ...formData,
+      phone: parseInt(formData.phone),
+    };
+
+    onSubmit(newContact);
   };
 
   return (
@@ -69,7 +75,7 @@ const ContactForm: React.FC<Props> = ({onSubmit, isLoading}) => {
                   id="phone"
                   name="phone"
                   className="form-control border-primary fs-5 mb-4 py-2"
-                  placeholder="Calories"
+                  placeholder="telephone"
                   onChange={changeForm}
                   required
                 />

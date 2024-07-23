@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {ApiContacts, Contact} from '../types';
+import {ApiContact, ApiContacts, Contact} from '../types';
 import axiosApi from '../axiosApi';
 import {AppDispatch} from '../app/store';
 
@@ -19,4 +19,18 @@ export const fetchContacts = createAsyncThunk<Contact[], undefined, {dispatch: A
       };
     });
   },
+);
+
+export const addContact = createAsyncThunk<void, ApiContact, {dispatch: AppDispatch}>(
+  'contacts/addContact',
+  async (contact) => {
+    await axiosApi.post('/contacts.json', contact);
+  }
+);
+
+export const deleteContact = createAsyncThunk<void, string, {dispatch: AppDispatch}>(
+  'contacts/deleteContact',
+  async (id) => {
+    await axiosApi.delete(`/contacts/${id}.json`);
+  }
 );

@@ -1,17 +1,21 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {Contact} from '../types';
-import {fetchContacts} from './contactsThunks';
+import {addContact, deleteContact, fetchContacts} from './contactsThunks';
 
 export interface ContactsState {
   contacts: Contact[];
   fetchLoading: boolean;
   contactDeleting: boolean;
+  createContactLoading: boolean;
+  deleteLoading: boolean;
 }
 
 const initialState: ContactsState = {
   contacts: [],
   fetchLoading: false,
   contactDeleting: false,
+  createContactLoading: false,
+  deleteLoading: false,
 };
 
 export const contactsSlice = createSlice({
@@ -27,13 +31,32 @@ export const contactsSlice = createSlice({
       state.contacts = contacts;
     }).addCase(fetchContacts.rejected, (state) => {
       state.fetchLoading = false;
-    })
+    });
 
+    builder
+      .addCase(addContact.pending, (state) => {
+      state.createContactLoading = true;
+    }).addCase(addContact.fulfilled, (state) => {
+      state.createContactLoading = false;
+    }).addCase(addContact.rejected, (state) => {
+      state.createContactLoading = false;
+    });
+
+    builder
+      .addCase(deleteContact.pending, (state) => {
+      state.deleteLoading = true;
+    }).addCase(deleteContact.fulfilled, (state) => {
+      state.deleteLoading = false;
+    }).addCase(deleteContact.rejected, (state) => {
+      state.deleteLoading = false;
+    });
   },
   selectors: {
     selectContacts: (state) => state.contacts,
     selectFetchLoading: (state) => state.fetchLoading,
     selectContactDeleting: (state) => state.contactDeleting,
+    selectCreateContactLoading: (state) => state.createContactLoading,
+    selectDeleteLoading: (state) => state.deleteLoading,
   }
 });
 
@@ -43,4 +66,6 @@ export const {
   selectContacts,
   selectContactDeleting,
   selectFetchLoading,
+  selectCreateContactLoading,
+  selectDeleteLoading
 } = contactsSlice.selectors;
