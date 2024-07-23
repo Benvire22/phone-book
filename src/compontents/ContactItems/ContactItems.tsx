@@ -7,7 +7,6 @@ import ContactItem from './ContactItem';
 const ContactItems = () => {
   const dispatch = useAppDispatch();
   const contacts = useAppSelector(selectContacts);
-  console.log(contacts);
 
   useEffect(() => {
     void dispatch(fetchContacts());
@@ -19,7 +18,7 @@ const ContactItems = () => {
           <ContactItem key={contact.id} contact={contact} />
       ))}
     </div>
-  ) : <h2>Empty...</h2>;
+  ) : <h1 className="text-center text-secondary">Empty...</h1>;
 };
 
 export default ContactItems;

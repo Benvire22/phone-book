@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {ApiContact, ApiContacts, Contact} from '../types';
+import {ApiContact, ApiContacts, Contact, ContactMutation} from '../types';
 import axiosApi from '../axiosApi';
 import {AppDispatch} from '../app/store';
 
@@ -32,5 +32,30 @@ export const deleteContact = createAsyncThunk<void, string, {dispatch: AppDispat
   'contacts/deleteContact',
   async (id) => {
     await axiosApi.delete(`/contacts/${id}.json`);
+  }
+);
+
+export const getOneContact = createAsyncThunk<ContactMutation, string, {dispatch: AppDispatch}>(
+  'contact/getOneContact',
+  async (id) => {
+    const {data: apiContact} = await axiosApi.get<ApiContact>(`/contacts/${id}.json`);
+
+    return {
+      ...apiContact,
+      phone: apiContact.phone.toString()
+    };
+  },
+);
+
+
+export interface EditContactArg {
+  id: string,
+  contact: ApiContact
+}
+
+export const editContactData = createAsyncThunk<void, EditContactArg, {dispatch: AppDispatch}>(
+  'contacts/editContact',
+  async ({id, contact}) => {
+    await axiosApi.put(`/contacts/${id}.json`, contact);
   }
 );

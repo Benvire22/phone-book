@@ -1,7 +1,9 @@
 import {ApiContact, ContactMutation} from '../../types';
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
-import {useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
+import {useAppSelector} from '../../app/hooks';
+import {selectExistingContact} from '../../store/contactsSlice';
 
 const initialState: ContactMutation = {
   name: '',
@@ -12,12 +14,19 @@ const initialState: ContactMutation = {
 
 interface Props {
   onSubmit: (contact: ApiContact) => void;
-  isLoading: boolean
+  isLoading: boolean,
 }
 
 const ContactForm: React.FC<Props> = ({onSubmit, isLoading}) => {
   const [formData, setFormData] = useState(initialState);
+  const existingContact = useAppSelector(selectExistingContact);
   const {id} = useParams();
+
+  useEffect(() => {
+    if (id && existingContact) {
+      setFormData(existingContact);
+    }
+  }, [id, existingContact]);
 
   const changeForm = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     setFormData({...formData, [e.target.name]: e.target.value});
@@ -100,10 +109,13 @@ const ContactForm: React.FC<Props> = ({onSubmit, isLoading}) => {
                   <img className="w-100 h-auto" src={formData.photo} alt={formData.name}/>
                 </div>
               </div>
-              <button type="submit" className="btn btn-warning text-white fs-4 px-4 py-2 mb-3" disabled={isLoading}>
+              <button type="submit" className="btn btn-success text-white fs-4 px-3 py-2 mb-3 me-3" disabled={isLoading}>
                 {isLoading && <ButtonSpinner/>}
                 save
               </button>
+              <Link to="/" className="btn btn-primary text-white fs-4 px-4 py-2 mb-3">
+                On Home
+              </Link>
             </form>
           </div>
         </div>

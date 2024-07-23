@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {Contact} from '../types';
-import {addContact, deleteContact, fetchContacts} from './contactsThunks';
+import {Contact, ContactMutation} from '../types';
+import {addContact, deleteContact, editContactData, fetchContacts, getOneContact} from './contactsThunks';
 
 export interface ContactsState {
   contacts: Contact[];
@@ -8,6 +8,9 @@ export interface ContactsState {
   contactDeleting: boolean;
   createContactLoading: boolean;
   deleteLoading: boolean;
+  editLoading: boolean;
+  fetchOneContactLoading: boolean;
+  existingContact: null | ContactMutation;
 }
 
 const initialState: ContactsState = {
@@ -16,6 +19,9 @@ const initialState: ContactsState = {
   contactDeleting: false,
   createContactLoading: false,
   deleteLoading: false,
+  fetchOneContactLoading: false,
+  editLoading: false,
+  existingContact: null,
 };
 
 export const contactsSlice = createSlice({
@@ -50,6 +56,24 @@ export const contactsSlice = createSlice({
     }).addCase(deleteContact.rejected, (state) => {
       state.deleteLoading = false;
     });
+
+    builder.addCase(getOneContact.pending, (state) => {
+      state.fetchOneContactLoading = true;
+    }).addCase(getOneContact.fulfilled, (state, {payload: existingContact} ) => {
+      state.fetchOneContactLoading = false;
+      state.existingContact = existingContact;
+    }).addCase(getOneContact.rejected, (state) => {
+      state.fetchOneContactLoading = false;
+    });
+
+    builder.addCase(editContactData.pending, (state) => {
+      state.editLoading = true;
+    }).addCase(editContactData.fulfilled, (state) => {
+      state.editLoading = false;
+    }).addCase(editContactData.rejected, (state) => {
+      state.editLoading = false;
+    });
+
   },
   selectors: {
     selectContacts: (state) => state.contacts,
@@ -57,6 +81,9 @@ export const contactsSlice = createSlice({
     selectContactDeleting: (state) => state.contactDeleting,
     selectCreateContactLoading: (state) => state.createContactLoading,
     selectDeleteLoading: (state) => state.deleteLoading,
+    selectEditLoading: (state) => state.editLoading,
+    selectExistingContact: (state) => state.existingContact,
+    fetchOneContactLoading: (state) => state.fetchOneContactLoading,
   }
 });
 
@@ -67,5 +94,8 @@ export const {
   selectContactDeleting,
   selectFetchLoading,
   selectCreateContactLoading,
-  selectDeleteLoading
+  selectDeleteLoading,
+  selectEditLoading,
+  selectExistingContact,
+  fetchOneContactLoading,
 } = contactsSlice.selectors;

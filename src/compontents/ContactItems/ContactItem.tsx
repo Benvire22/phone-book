@@ -1,6 +1,8 @@
 import {Contact} from '../../types';
 import React, {useState} from 'react';
 import MyModal from '../MyModal/MyModal';
+import {deleteContact, fetchContacts} from '../../store/contactsThunks';
+import {useAppDispatch} from '../../app/hooks';
 
 interface Props {
   contact: Contact;
@@ -8,6 +10,7 @@ interface Props {
 
 const ContactItem: React.FC<Props> = ({contact}) => {
   const [show, setShow] = useState(false);
+  const dispatch = useAppDispatch();
 
   const showModal = () => {
     setShow(true);
@@ -15,6 +18,16 @@ const ContactItem: React.FC<Props> = ({contact}) => {
 
   const closeModal = () => {
     setShow(false);
+  };
+
+  const onDelete = async () => {
+    try {
+      await dispatch(deleteContact(contact.id));
+      closeModal();
+      await dispatch(fetchContacts());
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -28,6 +41,7 @@ const ContactItem: React.FC<Props> = ({contact}) => {
         isShow={show}
         onClose={closeModal}
         contact={contact}
+        onDelete={onDelete}
       />
     </>
   );

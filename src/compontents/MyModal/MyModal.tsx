@@ -2,34 +2,21 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {Contact} from '../../types';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import { useAppSelector} from '../../app/hooks';
 import {selectDeleteLoading} from '../../store/contactsSlice';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
-import {deleteContact, fetchContacts} from '../../store/contactsThunks';
 import {Link} from 'react-router-dom';
 
 interface Props {
   isShow: boolean;
   contact: Contact;
   onClose: VoidFunction
+  onDelete: () => Promise<void>
 }
 
-const MyModal: React.FC<Props> = ({isShow, contact, onClose}) => {
-  const dispatch = useAppDispatch();
+const MyModal: React.FC<Props> = ({isShow, contact, onClose, onDelete}) => {
   const isDeleting = useAppSelector(selectDeleteLoading);
-
-  const onDelete = async () => {
-    try {
-      await dispatch(deleteContact(contact.id));
-      onClose();
-      await dispatch(fetchContacts());
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   return (
-    <>
       <Modal
         show={isShow}
         onHide={onClose}
@@ -60,7 +47,6 @@ const MyModal: React.FC<Props> = ({isShow, contact, onClose}) => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
   );
 };
 
