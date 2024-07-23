@@ -16,7 +16,7 @@ export const fetchContacts = createAsyncThunk<Contact[], undefined, {dispatch: A
       return {
         ...apiContacts[id],
         id: id,
-      }
+      };
     });
   },
 );
