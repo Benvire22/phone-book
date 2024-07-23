@@ -1,7 +1,7 @@
+import {useEffect} from 'react';
 import ContactForm from '../../compontents/ContactForm/ContactForm';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {useNavigate, useParams} from 'react-router-dom';
-import {useEffect} from 'react';
 import {ApiContact} from '../../types';
 import {fetchOneContactLoading, selectEditLoading} from '../../store/contactsSlice';
 import {editContactData, getOneContact} from '../../store/contactsThunks';

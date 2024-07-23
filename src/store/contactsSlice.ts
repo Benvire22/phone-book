@@ -5,29 +5,38 @@ import {addContact, deleteContact, editContactData, fetchContacts, getOneContact
 export interface ContactsState {
   contacts: Contact[];
   fetchLoading: boolean;
-  contactDeleting: boolean;
   createContactLoading: boolean;
   deleteLoading: boolean;
   editLoading: boolean;
   fetchOneContactLoading: boolean;
   existingContact: null | ContactMutation;
+  showModal: boolean
 }
 
 const initialState: ContactsState = {
   contacts: [],
   fetchLoading: false,
-  contactDeleting: false,
   createContactLoading: false,
   deleteLoading: false,
-  fetchOneContactLoading: false,
   editLoading: false,
+  fetchOneContactLoading: false,
   existingContact: null,
+  showModal: false
 };
 
 export const contactsSlice = createSlice({
   name: "contacts",
   initialState,
-  reducers: {},
+  reducers: {
+    onModal: (state) => {
+      state.showModal = true;
+    },
+
+    closeModal: (state) => {
+      state.showModal = false;
+    }
+
+  },
   extraReducers: (builder) => {
     builder.
       addCase(fetchContacts.pending, (state) => {
@@ -78,24 +87,26 @@ export const contactsSlice = createSlice({
   selectors: {
     selectContacts: (state) => state.contacts,
     selectFetchLoading: (state) => state.fetchLoading,
-    selectContactDeleting: (state) => state.contactDeleting,
     selectCreateContactLoading: (state) => state.createContactLoading,
     selectDeleteLoading: (state) => state.deleteLoading,
     selectEditLoading: (state) => state.editLoading,
     selectExistingContact: (state) => state.existingContact,
     fetchOneContactLoading: (state) => state.fetchOneContactLoading,
+    selectShowModal: (state) => state.showModal,
   }
 });
 
 export const contactsReducer = contactsSlice.reducer;
 
+export const {closeModal, onModal} = contactsSlice.actions;
+
 export const {
   selectContacts,
-  selectContactDeleting,
   selectFetchLoading,
   selectCreateContactLoading,
   selectDeleteLoading,
   selectEditLoading,
   selectExistingContact,
   fetchOneContactLoading,
+  selectShowModal,
 } = contactsSlice.selectors;

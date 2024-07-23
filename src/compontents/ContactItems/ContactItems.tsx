@@ -12,8 +12,8 @@ const ContactItems = () => {
     void dispatch(fetchContacts());
   }, [dispatch]);
 
-  return contacts ? (
-    <div className="row">
+  return contacts.length > 0 ? (
+    <div className="row justify-content-center">
       {contacts.map((contact) => (
           <ContactItem key={contact.id} contact={contact} />
       ))}

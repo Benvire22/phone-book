@@ -41,6 +41,7 @@ const ContactForm: React.FC<Props> = ({onSubmit, isLoading}) => {
     };
 
     onSubmit(newContact);
+    setFormData(initialState);
   };
 
   return (
@@ -84,7 +85,7 @@ const ContactForm: React.FC<Props> = ({onSubmit, isLoading}) => {
                   id="phone"
                   name="phone"
                   className="form-control border-primary fs-5 mb-4 py-2"
-                  placeholder="telephone"
+                  placeholder="phone"
                   onChange={changeForm}
                   required
                 />
@@ -104,8 +105,8 @@ const ContactForm: React.FC<Props> = ({onSubmit, isLoading}) => {
                 />
               </div>
               <div className="form-group mb-3">
-                <h4 className="fw-normal">Preview photo</h4>
-                <div className="col-2 my-2 mb-3 border">
+                <h4 className="fw-normal">Preview photo:</h4>
+                <div className="col-2 my-2 mb-3 py-1 border text-center">
                   <img className="w-100 h-auto" src={formData.photo} alt={formData.name}/>
                 </div>
               </div>
